@@ -1,0 +1,42 @@
+package common.message;
+
+import lombok.Data;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+@Data
+public abstract class AbstractRpcMessage implements Serializable {
+
+    public static Class<? extends AbstractRpcMessage> getMessageClass(int messageType) {
+        return messageClasses.get(messageType);
+    }
+
+    private int sequenceId;
+
+    private int messageType;
+
+    public abstract int getMessageType();
+
+    public static final int PingMessage = 14;
+    /**
+     * 请求类型 byte 值
+     */
+    public static final int RPC_MESSAGE_TYPE_REQUEST = 101;
+    /**
+     * 响应类型 byte 值
+     */
+    public static final int  RPC_MESSAGE_TYPE_RESPONSE = 102;
+
+    private static final Map<Integer, Class<? extends AbstractRpcMessage>> messageClasses = new HashMap<>();
+
+    static {
+        messageClasses.put(RPC_MESSAGE_TYPE_REQUEST, RpcRequestMessage.class);
+        messageClasses.put(RPC_MESSAGE_TYPE_RESPONSE, RpcResponseMessage.class);
+        messageClasses.put(PingMessage, PingMessage.class);
+    }
+
+
+
+}
